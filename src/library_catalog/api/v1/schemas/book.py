@@ -30,9 +30,9 @@ class ShowBook(BaseModel):
     genre: str
     pages: int
     available: bool
-    isbn: str | None
-    description: str | None
-    extra: dict[str, Any] | None
+    isbn: str | None = None
+    description: str | None = None
+    extra: dict[str, Any] | None = None
     created_at: datetime
     updated_at: datetime
 
