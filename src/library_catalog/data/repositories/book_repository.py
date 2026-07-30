@@ -1,7 +1,7 @@
 from ..models.book import Book
 from .base_repository import BaseRepository
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, func
 from collections.abc import Sequence
 
 
@@ -60,8 +60,25 @@ class BookRepository(BaseRepository[Book]):
             genre: str | None = None,
             year: int | None = None,
             available: bool | None = None,
-            limit: int = 20,
-            offset: int = 0,
     ) -> int:
         '''Подсчитать количество книг по фильтрам.'''
-        raise NotImplementedError
+        query = select(func.count()).select_from(Book)
+
+        if title:
+            query = query.where(Book.title.ilike(f"%{title}%"))
+
+        if author:
+            query = query.where(Book.author.ilike(f"%{author}%"))
+
+        if genre:
+            query = query.where(Book.genre.ilike(f"%{genre}%"))
+
+        if year is not None:
+            query = query.where(Book.year == year)
+
+        if available is not None:
+            query = query.where(Book.available == available)
+
+        result = await self.session.execute(query)
+
+        return result.scalar_one()

@@ -10,7 +10,7 @@ class BaseRepository(Generic[T]):
         self.session = session
         self.model = model
 
-    async def create(self, **kwargs) -> Book:
+    async def create(self, **kwargs):
         '''Создать запись.'''
         obj = self.model(**kwargs)
 
@@ -33,7 +33,18 @@ class BaseRepository(Generic[T]):
 
     async def update(self, id: UUID, **kwargs) -> T | None:
         '''Обновить запись.'''
-        pass
+        book = await self.session.get(self.model, id)
+
+        if not book:
+            return None
+
+        for key, value in kwargs.items():
+            setattr(book, key, value)
+
+        await self.session.commit()
+        await self.session.refresh(book)
+
+        return book
 
     async def delete(self, id: UUID) -> bool:
         '''Удалить запись'''
