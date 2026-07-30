@@ -1,6 +1,7 @@
 from typing import Generic, TypeVar, Type
 from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
+from ..models.book import Book
 
 T = TypeVar('T')
 
@@ -9,18 +10,26 @@ class BaseRepository(Generic[T]):
         self.session = session
         self.model = model
 
-    async def create(self, **kwargs) -> T:
+    async def create(self, **kwargs) -> Book:
         '''Создать запись.'''
-        raise NotImplementedError
+        obj = self.model(**kwargs)
 
-    async def get_by_id(self, id: UUID) -> T | None:
+        self.session.add(obj)
+
+        await self.session.commit()
+        await self.session.refresh(obj)
+
+        return obj
+
+    async def get_by_id(self, book_id: UUID) -> T | None:
         '''
         Получить по ID.
         
         Примечание: session.get() автоматически работает с primary key модели,
         независимо от его названия (id, book_id, user_id и т.д.)
         '''
-        pass
+        book = await self.session.get(self.model, book_id)
+        return book
 
     async def update(self, id: UUID, **kwargs) -> T | None:
         '''Обновить запись.'''

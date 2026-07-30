@@ -47,7 +47,11 @@ class BookRepository(BaseRepository[Book]):
     
     async def find_by_isbn(self, isbn: str) -> Book | None:
         '''Найти книгу по ISBN.'''
-        raise NotImplementedError
+        query = select(Book).where(Book.isbn == isbn)
+
+        result = await self.session.execute(query)
+
+        return result.scalar_one_or_none()
 
     async def count_by_filters(
             self,
