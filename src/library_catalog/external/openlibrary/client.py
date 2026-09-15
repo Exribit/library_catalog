@@ -49,7 +49,7 @@ class OpenLibraryClient(BaseApiClient):
             title: str,
             author: str,
     ) -> dict:
-        '''ПОиск по названию и автору.'''
+        '''Поиск по названию и автору.'''
         try:
             data = await self._get(
                 '/search.json',

@@ -61,7 +61,7 @@ class BookUpdate(BaseModel):
     isbn: str | None = None
     description: str | None = None
 
-class ShowBook(BaseModel):
+class ShowBook(BookBase):
     '''Схема для отображения книг (respnse).'''
     book_id: UUID
     available: bool
@@ -72,7 +72,31 @@ class ShowBook(BaseModel):
     updated_at: datetime
 
     model_config = {
-        "from_attributes": True
+        "from_attributes": True,
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "book_id": "123e4567-e89b-12d3-a456-426614174000",
+                    "title": "Clean Code",
+                    "author": "Robert Martin",
+                    "year": 2008,
+                    "genre": "Programming",
+                    "pages": 464,
+                    "available": True,
+                    "isbn": "978-0132350884",
+                    "description": "A Handbook of Agile Software Craftsmanship",
+                    "extra": {
+                        "cover_url": "https://covers.openlibrary.org/b/id/123-L.jpg",
+                        "subjects": [
+                            "Computer Science",
+                            "Software Engineering",
+                        ],
+                    },
+                    "created_at": "2024-01-01T12:00:00",
+                    "updated_at": "2024-01-01T12:00:00",
+                }
+            ]
+        },
     }
 
 class BookFilters(BaseModel):

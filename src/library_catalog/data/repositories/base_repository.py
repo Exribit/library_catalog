@@ -46,9 +46,17 @@ class BaseRepository(Generic[T]):
 
         return book
 
-    async def delete(self, id: UUID) -> bool:
+    async def delete(self, obj_id: UUID) -> bool:
         '''Удалить запись'''
-        raise NotImplementedError
+        obj = await self.session.get(self.model, obj_id)
+
+        if obj is None:
+            return False
+
+        await self.session.delete(obj)
+        await self.session.commit()
+
+        return True
 
     async def get_all(self, 
                       limit: int = 100, 

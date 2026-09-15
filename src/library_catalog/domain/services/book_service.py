@@ -8,6 +8,7 @@ from ..exceptions import (
     InvalidPagesException,
     InvalidYearException,
     OpenLibraryException,
+    OpenLibraryTimeoutException,
 )
 from ..mappers.book_mapper import BookMapper
 
@@ -201,7 +202,7 @@ class BookService:
                 isbn=book_data.isbn,
             )
             return extra if extra else None
-        except OpenLibraryException:
+        except (OpenLibraryException, OpenLibraryTimeoutException):
             # Логируем но не прерываем создание книги
             import logging
             logger = logging.getLogger(__name__)
