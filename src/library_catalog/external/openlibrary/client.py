@@ -92,6 +92,7 @@ class OpenLibraryClient(BaseApiClient):
         
         # Попытка 2: По title + author
         return await self.search_by_title_author(title, author)
+
     
     def _extract_book_data(self, doc: dict) -> dict:
         """

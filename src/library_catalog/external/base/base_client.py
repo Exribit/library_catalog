@@ -1,5 +1,6 @@
 from typing import Any
 from abc import ABC, abstractmethod
+import asyncio
 import httpx
 import logging
 import time
@@ -84,7 +85,7 @@ class BaseApiClient(ABC):
 
                 wait_time = self.backoff * (2 ** attempt)
                 self.logger.warning(f'Timeout, retrying in {wait_time} s...')
-                time.sleep(wait_time)
+                await asyncio.sleep(wait_time)
 
             except httpx.HTTPStatusError as e:
                 # 5xx ошибки - retry
