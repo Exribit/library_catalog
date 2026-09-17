@@ -32,3 +32,8 @@ dev = [
     "ruff (>=0.15.21,<0.16.0)",
     "mypy (>=2.3.0,<3.0.0)"
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
