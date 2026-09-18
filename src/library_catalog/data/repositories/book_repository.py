@@ -31,7 +31,7 @@ class BookRepository(BaseRepository[Book]):
             query = query.where(Book.author.ilike(f'%{author}%'))
         
         if genre:
-            query = query.where(Book.genre.ilike(f'%{genre}%'))
+            query = query.where(Book.genre == genre)
 
         if year is not None:
             query = query.where(Book.year == year)
@@ -71,7 +71,7 @@ class BookRepository(BaseRepository[Book]):
             query = query.where(Book.author.ilike(f"%{author}%"))
 
         if genre:
-            query = query.where(Book.genre.ilike(f"%{genre}%"))
+            query = query.where(Book.genre == genre)
 
         if year is not None:
             query = query.where(Book.year == year)

@@ -102,6 +102,13 @@ class BookService:
         existing = await self.book_repo.get_by_id(book_id)
         if existing is None:
             raise BookNotFoundException(book_id)
+
+        if book_data.isbn is not None:
+            book_with_isbn = await self.book_repo.find_by_isbn(book_data.isbn)
+            # Если книга с таким ISBN нашлась, и это НЕ та же самая книга, которую мы обновляем
+            if book_with_isbn and book_with_isbn.book_id != book_id:
+                raise BookAlreadyExistsException(book_data.isbn)
+
         
         # Валидация если обновляется год/страницы
         if book_data.year is not None:
